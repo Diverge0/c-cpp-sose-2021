@@ -16,7 +16,7 @@ In diesem Repository finden Sie die Datei `atf_hpcc.pdf`, in der Sie weitere Inf
 
 **Aufgabenstellung**: Laden Sie sich das vorgefertigte C Projekt aus diesem Repository herunter (`git clone git@zivgitlab.uni-muenster.de:b_koep01/c-cpp-sose-2021.git`). Implementieren Sie ein Auto-Tuning Framework in den Dateien `atf.h` und `atf.c` (bitte ändern Sie nur diese beiden Dateien), indem Sie die Phasen Generation, Storage und Exploration in dieser Reihenfolge implementieren. Nutzen Sie das beigefügte `Makefile`, um das Projekt zu übersetzen und Ihre Implementierung zu testen (Details dazu finden Sie in den Abschnitten Generation, Storage, und Exploration). Es ist vorgesehen das Projekt auf einem Linux Rechner zu übersetzen..
 
-**Wichtiger Hinweis**: Bitte ändern Sie nur die Dateien `atf.h` und `atf.c`. Die Aufgabe gilt als bestanden, wenn der Test `make test_final` erfolgreich ausgeführt wird. Abgaben, die nicht auf einem Linux-Rechner der Uni (z.B. `zivlts1.uni-muenster.de`) kompilieren, gelten automatisch als _nicht bestanden_. Sollten Sie Fragen zur Aufgabenstellung haben, öffnen Sie bitte ein Issue in diesem Repository.
+**Wichtiger Hinweis**: Bitte ändern Sie nur die Dateien `atf.h` und `atf.c`. Die Aufgabe gilt als bestanden, wenn der Test `make test_final` erfolgreich ausgeführt wird. Abgaben, die nicht auf einem Linux-Rechner der Uni (z.B. `zivlts1.uni-muenster.de`) kompilieren, gelten automatisch als _nicht bestanden_. Sollten Sie Fragen zur Aufgabenstellung haben, stellen Sie diese bitte im Diskussionsforum des Learnwebkurses.
 
 ## Aufgabe 1: Generation
 
