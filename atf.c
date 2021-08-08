@@ -1,7 +1,9 @@
 #include "atf.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
+//#define DEBUG
 #define INCR 8
 
 void print_configuration(int* values, int num_values) {
@@ -50,7 +52,7 @@ void generate_search_space(tp_t* parameters, int num_parameters,
   int finished = 0;
   while(!finished){
     int isValid = 1;
-    int const_param[10];
+    int const_param[10] = {0};
 
     //das geht bestimmt irgendwie schöner
     for(int i=0; i<num_parameters; i++){
@@ -87,7 +89,6 @@ void generate_search_space(tp_t* parameters, int num_parameters,
       if(search_space->capacity <= search_space->size){
         search_space->configurations = realloc(search_space->configurations, ((search_space->capacity + INCR) * sizeof(configuration_t)));
         search_space->capacity += INCR;
-        printf("foo");
       }
 
       search_space->configurations[search_space->size] = current_conf;
@@ -112,5 +113,79 @@ void free_search_space(search_space_t* search_space) {
 void explore_search_space(search_space_t* search_space, cost_function_t cost_function,
                           SEARCH_STRATEGY search_strategy, ABORT_TYPE abort_type, int abort_value,
                           configuration_t* best_config, int* cost) {
-  // Ergänzen Sie hier Ihre Lösung für Aufgabe 3
+  *cost = __INT_MAX__;
+  time_t start = time(NULL);
+  int iterations = 0;
+
+  if(search_strategy == RANDOM){
+    
+
+  } else if (search_strategy == EXHAUSTIVE){
+    for(int i=0; i<search_space->size; i++){
+      iterations++;
+      int current_cost = run_cost_function(&search_space->configurations[i], cost_function);
+      if(current_cost < *cost){
+        *cost = current_cost;
+        *best_config = search_space->configurations[i];
+      }
+
+      #ifdef DEBUG
+      printf("Elapsed time: %li; Iterations: %i\n", time(NULL)-start, iterations);
+      #endif
+
+      if(check_abort(abort_type, abort_value, start, iterations)) break;
+    }
+  }
+}
+
+int run_cost_function(configuration_t* configuration, cost_function_t cost_function){
+  //das geht bestimmt irgendwie schöner
+  int const_param[10] = {0};
+  for(int j=0; j<configuration->size; j++){
+    const_param[j] = configuration->values[j];
+  }
+
+  int cost = cost_function(const_param[0], const_param[1], const_param[2], 
+                      const_param[3], const_param[4], const_param[5], 
+                      const_param[6], const_param[7], const_param[8], 
+                      const_param[9]);
+
+  #ifdef DEBUG
+  printf("Testing configuration %i, %i, %i, %i, %i, %i, %i, %i, %i, %i; Cost: %i\n",
+                      const_param[0], const_param[1], const_param[2], 
+                      const_param[3], const_param[4], const_param[5], 
+                      const_param[6], const_param[7], const_param[8], 
+                      const_param[9], cost);
+  #endif
+
+  return cost;
+}
+
+//checks if the abort configuration is reached. Don't invoke this function outside of explore_search_space(...)
+int check_abort(ABORT_TYPE abort_type, int abort_value, time_t start, int iterations){
+  switch (abort_type){
+  case EVALUATIONS:
+    if(iterations >= abort_value) return 1;
+    else return 0;
+    break;
+  
+  case SECONDS:
+    if(time(NULL) - start >= abort_value) return 1;
+    else return 0;
+    break;
+  
+  case MINUTES:
+    if(time(NULL) - start >= abort_value * 60) return 1;
+    else return 0;
+    break;
+
+  case HOURS:
+    if(time(NULL) - start >= abort_value * 60 * 60) return 1;
+    else return 0;
+    break;
+  
+  default:
+    return 0;
+    break;
+  }
 }
