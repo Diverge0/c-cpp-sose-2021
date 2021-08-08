@@ -25,8 +25,9 @@ typedef struct {
 // Type for the search space, i.e. a collection of all valid configurations.
 typedef struct {
   // Ergänzen Sie hier Ihre Lösung für Aufgabe 2
-
+  configuration_t* configurations;
   int size;  // number of configurations in this search space
+  int capacity;
 } search_space_t;
 // Get configuration with "index" (index in [0..size-1]) from "search space".
 configuration_t get_config(search_space_t* search_space, int index);

@@ -1,6 +1,8 @@
 #include "atf.h"
-
 #include <stdio.h>
+#include <stdlib.h>
+
+#define INCR 50
 
 void print_configuration(int* values, int num_values) {
   for (int i = 0; i < num_values; ++i) {
@@ -30,6 +32,11 @@ int count_up(int* minIndex, int* currentIndex, int* maxIndex, int current){
 
 void generate_search_space(tp_t* parameters, int num_parameters,
                            search_space_t* search_space) {
+  //malloc search space with initial capacity INCR
+  search_space->capacity = INCR;
+  search_space->size = 0;
+  search_space->configurations = (configuration_t*)malloc(INCR * sizeof(configuration_t));
+
   int minIndex[num_parameters];
   int currentIndex[num_parameters];
   int maxIndex[num_parameters];
@@ -63,7 +70,19 @@ void generate_search_space(tp_t* parameters, int num_parameters,
       }
     }
     if(isValid){
-      print_configuration(currentIndex, num_parameters);
+      //print_configuration(currentIndex, num_parameters);
+
+      tp_t* pointer_parameters[num_parameters];
+      for(int i=0; i<num_parameters; i++){
+        pointer_parameters[i] = &parameters[i];
+      }
+
+      configuration_t current_conf = {pointer_parameters, currentIndex, num_parameters};
+      if(search_space->capacity <= search_space->size){
+        search_space = realloc(search_space, (search_space->capacity + INCR) * sizeof(search_space_t));
+      }
+      search_space->configurations[search_space->size] = current_conf;
+      search_space->size++;
     }
 
     //count up
@@ -71,10 +90,10 @@ void generate_search_space(tp_t* parameters, int num_parameters,
   }
 }
 configuration_t get_config(search_space_t* search_space, int index) {
-  // Ergänzen Sie hier Ihre Lösung für Aufgabe 2
+  return search_space->configurations[index];
 }
 void free_search_space(search_space_t* search_space) {
-  // Ergänzen Sie hier Ihre Lösung für Aufgabe 2
+  free(search_space->configurations);
 }
 
 void explore_search_space(search_space_t* search_space, cost_function_t cost_function,
