@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define INCR 50
+#define INCR 8
 
 void print_configuration(int* values, int num_values) {
   for (int i = 0; i < num_values; ++i) {
@@ -72,15 +72,24 @@ void generate_search_space(tp_t* parameters, int num_parameters,
     if(isValid){
       //print_configuration(currentIndex, num_parameters);
 
-      tp_t* pointer_parameters[num_parameters];
+      tp_t** stored_parameters = malloc(num_parameters * sizeof(tp_t*));
       for(int i=0; i<num_parameters; i++){
-        pointer_parameters[i] = &parameters[i];
+        stored_parameters[i] = &parameters[i];
       }
 
-      configuration_t current_conf = {pointer_parameters, currentIndex, num_parameters};
-      if(search_space->capacity <= search_space->size){
-        search_space = realloc(search_space, (search_space->capacity + INCR) * sizeof(search_space_t));
+      int* stored_values = malloc(num_parameters * sizeof(int));
+      for(int i=0; i<num_parameters; i++){
+        stored_values[i] = currentIndex[i];
       }
+
+      //expand array for configurations
+      configuration_t current_conf = {stored_parameters, stored_values, num_parameters};
+      if(search_space->capacity <= search_space->size){
+        search_space->configurations = realloc(search_space->configurations, ((search_space->capacity + INCR) * sizeof(configuration_t)));
+        search_space->capacity += INCR;
+        printf("foo");
+      }
+
       search_space->configurations[search_space->size] = current_conf;
       search_space->size++;
     }
@@ -93,6 +102,10 @@ configuration_t get_config(search_space_t* search_space, int index) {
   return search_space->configurations[index];
 }
 void free_search_space(search_space_t* search_space) {
+  for(int i=0; i<search_space->size; i++){
+    free(search_space->configurations[i].parameters);
+    free(search_space->configurations[i].values);
+  }
   free(search_space->configurations);
 }
 
