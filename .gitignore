@@ -53,3 +53,10 @@ Mkfile.old
 dkms.conf
 
 *.txt
+
+test_storage
+test_generation
+test_exploration
+test_final
+
+.vscode
