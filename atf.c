@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-//#define DEBUG
+#define DEBUG
 #define INCR 8
 
 void print_configuration(int* values, int num_values) {
@@ -28,7 +28,6 @@ int count_up(int* minIndex, int* currentIndex, int* maxIndex, int current){
   } else{
     currentIndex[current] = minIndex[current];
     return count_up(minIndex, currentIndex, maxIndex, current-1);
-
   }
 }
 
@@ -116,17 +115,21 @@ void explore_search_space(search_space_t* search_space, cost_function_t cost_fun
   *cost = __INT_MAX__;
   time_t start = time(NULL);
   int iterations = 0;
+  srand(time(NULL));
+  configuration_t next_config;
 
-  if(search_strategy == RANDOM){
-    
+  while(1){
+    if(search_strategy == RANDOM){
+      next_config = search_space->configurations[rand() % (search_space->size)];
+    } else if (search_strategy == EXHAUSTIVE){
+      next_config = search_space->configurations[iterations];
+    }
+    iterations++;
 
-  } else if (search_strategy == EXHAUSTIVE){
-    for(int i=0; i<search_space->size; i++){
-      iterations++;
-      int current_cost = run_cost_function(&search_space->configurations[i], cost_function);
+    int current_cost = run_cost_function(&next_config, cost_function);
       if(current_cost < *cost){
         *cost = current_cost;
-        *best_config = search_space->configurations[i];
+        *best_config = next_config;
       }
 
       #ifdef DEBUG
@@ -134,7 +137,6 @@ void explore_search_space(search_space_t* search_space, cost_function_t cost_fun
       #endif
 
       if(check_abort(abort_type, abort_value, start, iterations)) break;
-    }
   }
 }
 
