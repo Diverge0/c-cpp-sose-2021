@@ -60,5 +60,7 @@ void explore_search_space(search_space_t* search_space, cost_function_t cost_fun
                           SEARCH_STRATEGY search_strategy, ABORT_TYPE abort_type, int abort_value,
                           configuration_t* best_config, int* cost);
 
+int count_up(int* minIndex, int* currentIndex, int* maxIndex, int current);
+
 
 #endif // __ATF_H__

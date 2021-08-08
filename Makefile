@@ -25,6 +25,12 @@ compile_test_generation: $(OBJ) test_generation.o
 test_generation: compile_test_generation
 	./test_generation
 
+testing: compile_testing
+	./testing
+
+compile_testing: $(OBJ) testing.o
+	$(CC) -o testing $^ $(CFLAGS) $(LIBS)
+
 compile_test_storage: $(OBJ) test_storage.o
 	$(CC) -o test_storage $^ $(CFLAGS) $(LIBS)
 

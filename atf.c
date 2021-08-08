@@ -14,22 +14,34 @@ tp_t create_tp(char* name, int min, int max, constraint_t constraint) {
   return newtpt;
 }
 
-//todo: add to header file
-void count_up(int num_parameters, int* currentIndex, int* maxIndex, int current){
-  if()
+int count_up(int* minIndex, int* currentIndex, int* maxIndex, int current){
+  if(current == -1) {
+    return 1;
+  }
+  if(currentIndex[current] < maxIndex[current]){
+    currentIndex[current]++;
+    return 0;
+  } else{
+    currentIndex[current] = minIndex[current];
+    return count_up(minIndex, currentIndex, maxIndex, current-1);
+
+  }
 }
 
 void generate_search_space(tp_t* parameters, int num_parameters,
                            search_space_t* search_space) {
+  int minIndex[num_parameters];
   int currentIndex[num_parameters];
   int maxIndex[num_parameters];
   for(int i=0; i<num_parameters;i++){
+    minIndex[i] = parameters[i].min;
     currentIndex[i] = parameters[i].min;
     maxIndex[i] = parameters[i].max;
   }
 
   //check if configuration is valid
-  while(~~~){
+  int finished = 0;
+  while(!finished){
     int isValid = 1;
     int const_param[10];
 
@@ -55,9 +67,7 @@ void generate_search_space(tp_t* parameters, int num_parameters,
     }
 
     //count up
-    for(int i=num_parameters; i>=0; i--){
-      if()
-    }
+    finished = count_up(minIndex, currentIndex, maxIndex, num_parameters-1);
   }
 }
 configuration_t get_config(search_space_t* search_space, int index) {
