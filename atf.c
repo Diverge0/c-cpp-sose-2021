@@ -53,6 +53,8 @@ void generate_search_space(tp_t* parameters, int num_parameters,
     int isValid = 1;
     int const_param[10] = {0};
 
+    int invalidParameter = -1;
+
     //das geht bestimmt irgendwie schöner
     for(int i=0; i<num_parameters; i++){
       const_param[i] = currentIndex[i];
@@ -66,6 +68,8 @@ void generate_search_space(tp_t* parameters, int num_parameters,
                                     const_param[6], const_param[7], const_param[8], 
                                     const_param[9])){
           isValid = 0;
+          invalidParameter = i;
+          break;
         }
         
       }
@@ -92,10 +96,13 @@ void generate_search_space(tp_t* parameters, int num_parameters,
 
       search_space->configurations[search_space->size] = current_conf;
       search_space->size++;
+      finished = count_up(minIndex, currentIndex, maxIndex, num_parameters-1);
+    } else{
+      finished = count_up(minIndex, currentIndex, maxIndex, invalidParameter);
     }
 
     //count up
-    finished = count_up(minIndex, currentIndex, maxIndex, num_parameters-1);
+    //finished = count_up(minIndex, currentIndex, maxIndex, num_parameters-1);
   }
 }
 configuration_t get_config(search_space_t* search_space, int index) {
