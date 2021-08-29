@@ -1,9 +1,15 @@
+/*
+  Abgabe Aufgabe fuer C/C++-Kurs von Henning Ohlmeyer (Matrikelnummer 504627)
+*/
 #include "atf.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
+//for more console output (needed for test_generation)
 #define DEBUG
+
+//when configuration array is full: arraylength = arraylength + INCR
 #define INCR 8
 
 void print_configuration(int* values, int num_values) {
@@ -52,10 +58,8 @@ void generate_search_space(tp_t* parameters, int num_parameters,
   while(!finished){
     int isValid = 1;
     int const_param[10] = {0};
+    int invalidParameter = 1;
 
-    int invalidParameter = -1;
-
-    //das geht bestimmt irgendwie schöner
     for(int i=0; i<num_parameters; i++){
       const_param[i] = currentIndex[i];
     }
@@ -75,7 +79,9 @@ void generate_search_space(tp_t* parameters, int num_parameters,
       }
     }
     if(isValid){
-      //print_configuration(currentIndex, num_parameters);
+      #ifdef DEBUG
+      print_configuration(currentIndex, num_parameters);
+      #endif
 
       tp_t** stored_parameters = malloc(num_parameters * sizeof(tp_t*));
       for(int i=0; i<num_parameters; i++){
@@ -98,16 +104,16 @@ void generate_search_space(tp_t* parameters, int num_parameters,
       search_space->size++;
       finished = count_up(minIndex, currentIndex, maxIndex, num_parameters-1);
     } else{
+      //works because tp constraint is only dependent on own or previous tps
       finished = count_up(minIndex, currentIndex, maxIndex, invalidParameter);
     }
-
-    //count up
-    //finished = count_up(minIndex, currentIndex, maxIndex, num_parameters-1);
   }
 }
+
 configuration_t get_config(search_space_t* search_space, int index) {
   return search_space->configurations[index];
 }
+
 void free_search_space(search_space_t* search_space) {
   for(int i=0; i<search_space->size; i++){
     free(search_space->configurations[i].parameters);
@@ -148,7 +154,6 @@ void explore_search_space(search_space_t* search_space, cost_function_t cost_fun
 }
 
 int run_cost_function(configuration_t* configuration, cost_function_t cost_function){
-  //das geht bestimmt irgendwie schöner
   int const_param[10] = {0};
   for(int j=0; j<configuration->size; j++){
     const_param[j] = configuration->values[j];

@@ -63,7 +63,9 @@ void explore_search_space(search_space_t* search_space, cost_function_t cost_fun
                           configuration_t* best_config, int* cost);
 
 int count_up(int* minIndex, int* currentIndex, int* maxIndex, int current);
+
 int check_abort(ABORT_TYPE abort_type, int abort_value, time_t start, int iterations);
+
 int run_cost_function(configuration_t* configuration, cost_function_t cost_function);
 
 
